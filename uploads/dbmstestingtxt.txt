@@ -1,0 +1,26 @@
+DETAILED SYLLABUS 
+Module-1: Introduction Database Concepts & Entity–Relationship Data Model 
+9 Hours 
+1.1 Database Concepts: Introduction, Characteristics of databases, File system v/s Database system, Data 
+abstraction and data Independence, DBMS system architecture, Database Administrator. 
+1.2 Entity–Relationship Data Model: The Entity-Relationship (ER) Model: Entity types: Weak and strong entity 
+sets, Entity sets, Types of Attributes, Keys, Relationship constraints: Cardinality and Participation, Extended 
+Entity- Relationship (EER) Model: Generalization, Specialization and Aggregation 
+Module-2: Relational Model, Algebra & Database Design 
+10 Hours 
+2.1 Relational Model: Introduction to the Relational Model, relational schema and concept of keys. Mapping 
+the ER and EER Model to the Relational Model. 
+2.2 Algebra: Relational Algebra-operators, Relational Algebra Queries. 
+2.3 Database Design: Pitfalls in Relational-Database designs, Concept of normalization, Function 
+Dependencies, First Normal Form, 2NF, 3NF, BCNF. 
+Module-3: Structured Query Language (SQL) 
+10 Hours 
+3.1 Overview of SQL, Data Definition Commands, Integrity constraints: key constraints, Domain Constraints, 
+Referential integrity, check constraints, Data Manipulation commands, Data Control 
+Commands, Set and string operations, aggregate function-group by having, Views in SQL, joins, Nested and 
+complex queries, Triggers. 
+Module-4: Transactions Management and Concurrency and Recovery 
+10 Hours 
+4.1 Transaction concept, Transaction states, ACID properties, Transaction Control Commands, Concurrent 
+Executions, Serializability-Conflict and View, Concurrency Control: Lock-based, Timestamp-based 
+protocols, Recovery System: Log based recovery, Deadlock handling. 
