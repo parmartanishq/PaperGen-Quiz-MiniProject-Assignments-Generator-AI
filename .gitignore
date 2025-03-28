@@ -13,5 +13,3 @@ __pycache__/
 # Ignore dependency files (optional)
 *.log
 
-# Ignore uploaded files (optional)
-uploads/
