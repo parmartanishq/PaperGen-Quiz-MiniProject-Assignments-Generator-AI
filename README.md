@@ -1,4 +1,4 @@
-# PaperGen📝-Quiz-MiniProject-Assignments-Generator-AI
+# PaperGen-Quiz-MiniProject-Assignments-Generator-AI
 
 
 ### Project is Under Development. 
