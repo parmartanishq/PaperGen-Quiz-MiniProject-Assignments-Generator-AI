@@ -16,28 +16,28 @@
 
     <h2>Generated CCE CIAP Components</h2>
 
-    {% if topics.quiz_topics %}
+    {% if quiz_topics %}
     <h3>Quiz Questions:</h3>
     <ul>
-        {% for topic in topics.quiz_topics %}
+        {% for topic in quiz_topics %}
         <li>{{ topic }}</li>
         {% endfor %}
     </ul>
     {% endif %}
 
-    {% if topics.presentation_topics %}
+    {% if presentation_topics %}
     <h3>Presentation Topics:</h3>
     <ul>
-        {% for topic in topics.presentation_topics %}
+        {% for topic in presentation_topics %}
         <li>{{ topic }}</li>
         {% endfor %}
     </ul>
     {% endif %}
 
-    {% if topics.project_ideas %}
+    {% if project_ideas %}
     <h3>Mini Project Ideas:</h3>
     <ul>
-        {% for topic in topics.project_ideas %}
+        {% for topic in project_ideas %}
         <li>{{ topic }}</li>
         {% endfor %}
     </ul>
