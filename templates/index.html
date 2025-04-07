@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PaperGen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 5%;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            transition: transform 0.5s ease;
+        }
+        textarea, input[type="file"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* Loading screen styles */
+        #loadingScreen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #007BFF;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        let formData = new FormData();
+
+        function handleNext() {
+            const inputText = document.querySelector("textarea").value;
+            const fileInput = document.querySelector("input[type='file']").files[0];
+            const generateQuiz = document.querySelector("#quiz").checked;
+
+            if (!inputText && !fileInput) {
+                alert("Please input text or upload a file first.");
+                return;
+            }
+
+            if (!generateQuiz) {
+                alert("Currently only quiz is supported for step transition.");
+                return;
+            }
+
+            formData.append("text_input", inputText);
+            if (fileInput) {
+                formData.append("file", fileInput);
+            }
+
+            document.getElementById("first-step").classList.add("hidden");
+            document.getElementById("second-step").classList.remove("hidden");
+        }
+
+        function submitFinal() {
+            const count = document.getElementById("quiz_count").value;
+            formData.append("quiz_count", count);
+
+            // Show loading screen
+            document.getElementById("loadingScreen").style.display = "flex";
+
+            fetch("/generate_quiz", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("loadingScreen").style.display = "none";
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        <p>Generating, please wait...</p>
+    </div>
+
+    <h1>Welcome to PaperGen</h1>
+    <div class="container" id="first-step">
+        <textarea placeholder="Enter syllabus text..." name="text_input"></textarea><br>
+        <input type="file" name="file"><br>
+        <h3>Select what to generate:</h3>
+        <input type="checkbox" id="quiz"> Quiz Questions<br><br>
+        <button class="btn" onclick="handleNext()">Next</button>
+    </div>
+
+    <div class="container hidden" id="second-step">
+        <h3>Select Number of Quiz Questions</h3>
+        <input type="range" id="quiz_count" min="5" max="50" value="10" oninput="this.nextElementSibling.value = this.value">
+        <output>10</output><br>
+        <button class="btn" onclick="submitFinal()">Generate Quiz</button>
+    </div>
+</body>
+</html>
