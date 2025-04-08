@@ -1,148 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>PaperGen</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            margin-top: 5%;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 50%;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            transition: transform 0.5s ease;
-        }
-        textarea, input[type="file"] {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .hidden {
-            display: none;
-        }
+  <meta charset="UTF-8">
+  <title>PaperGen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: #1a1a1a;
+    }
 
-        /* Loading screen styles */
-        #loadingScreen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background-color: rgba(255, 255, 255, 0.9);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            z-index: 9999;
-        }
+    .container {
+      padding: 2.5rem 1.5rem;
+      max-width: 1000px;
+      margin: auto;
+    }
 
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #007BFF;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(120deg, #2c5282, #4c51bf);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-    <script>
-        let formData = new FormData();
+    .chat-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
 
-        function handleNext() {
-            const inputText = document.querySelector("textarea").value;
-            const fileInput = document.querySelector("input[type='file']").files[0];
-            const generateQuiz = document.querySelector("#quiz").checked;
+    .upload-btn {
+      border: 2px dashed #4f46e5;
+      background-color: rgba(79, 70, 229, 0.1);
+      color: #4f46e5;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      white-space: nowrap;
+      position: relative;
+    }
 
-            if (!inputText && !fileInput) {
-                alert("Please input text or upload a file first.");
-                return;
-            }
+    .upload-btn.green {
+      border-color: #16a34a;
+      background-color: rgba(22, 163, 74, 0.1);
+      color: #16a34a;
+    }
 
-            if (!generateQuiz) {
-                alert("Currently only quiz is supported for step transition.");
-                return;
-            }
+    .upload-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+    }
 
-            formData.append("text_input", inputText);
-            if (fileInput) {
-                formData.append("file", fileInput);
-            }
+    .upload-btn:hover {
+      transform: translateY(-1px);
+    }
 
-            document.getElementById("first-step").classList.add("hidden");
-            document.getElementById("second-step").classList.remove("hidden");
-        }
+    .remove-file {
+      display: none;
+      margin-left: auto;
+      font-size: 1rem;
+      color: #dc2626;
+      cursor: pointer;
+    }
 
-        function submitFinal() {
-            const count = document.getElementById("quiz_count").value;
-            formData.append("quiz_count", count);
+    .textarea-wrapper {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
 
-            // Show loading screen
-            document.getElementById("loadingScreen").style.display = "flex";
+    #query {
+      width: 100%;
+      min-height: 2.5rem;
+      max-height: 150px;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.75rem;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+      resize: none;
+      overflow-y: hidden;
+      line-height: 1.5;
+      box-sizing: border-box;
+    }
 
-            fetch("/generate_quiz", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                document.getElementById("loadingScreen").style.display = "none";
-            });
-        }
-    </script>
+    #query:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .send-btn {
+      background-color: #4f46e5;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+      align-self: flex-start;
+      white-space: nowrap;
+    }
+
+    .send-btn:hover {
+      background-color: #4338ca;
+      transform: translateY(-1px);
+    }
+
+    .option-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .option-btn {
+      padding: 0.75rem 1.5rem;
+      background-color: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      color: #4b5563;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .option-btn:hover {
+      background-color: #f9fafb;
+      border-color: #4f46e5;
+      color: #4f46e5;
+    }
+
+    .option-btn.selected {
+      background-color: #4f46e5;
+      border-color: #4f46e5;
+      color: white;
+    }
+
+    .spinner {
+      display: none;
+      margin: 2rem auto;
+      text-align: center;
+    }
+
+    .spinner div {
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid #4f46e5;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    .spinner p {
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #results-container {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 2px solid #e5e7eb;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      background-color: white;
+      white-space: pre-wrap;
+      text-align: left;
+      font-size: 1rem;
+      line-height: 1.6;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    #results-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #results-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    #results-container::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+    #results-container::-webkit-scrollbar-thumb:hover {
+      background: #a1a1a1;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .chat-bar {
+        flex-direction: column;
+        padding: 0.75rem;
+        align-items: stretch;
+      }
+
+      .textarea-wrapper {
+        width: 100%;
+      }
+
+      .send-btn {
+        width: 100%;
+      }
+
+      .option-buttons {
+        gap: 0.75rem;
+      }
+
+      .option-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      .upload-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div id="loadingScreen">
-        <div class="spinner"></div>
-        <p>Generating, please wait...</p>
+<div class="container">
+  <h1>Welcome to PaperGen</h1>
+
+  <form id="query-form" enctype="multipart/form-data">
+    <div class="chat-bar">
+      <label class="upload-btn" id="upload-label">
+        <svg id="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <span id="upload-text">Upload File</span>
+        <input type="file" id="file-upload" name="file" accept=".pdf,.txt" style="display: none;" />
+        <span class="remove-file" id="remove-file">❌</span>
+      </label>
+
+      <div class="textarea-wrapper">
+        <textarea id="query" name="query" placeholder="Type your message..." rows="1"></textarea>
+      </div>
+      <button type="submit" class="send-btn">Send</button>
     </div>
 
-    <h1>Welcome to PaperGen</h1>
-    <div class="container" id="first-step">
-        <textarea placeholder="Enter syllabus text..." name="text_input"></textarea><br>
-        <input type="file" name="file"><br>
-        <h3>Select what to generate:</h3>
-        <input type="checkbox" id="quiz"> Quiz Questions<br><br>
-        <button class="btn" onclick="handleNext()">Next</button>
+    <div class="option-buttons">
+      <button type="button" class="option-btn" data-type="Quiz">Quiz</button>
+      <button type="button" class="option-btn" data-type="Assignment">Assignment</button>
+      <button type="button" class="option-btn" data-type="Presentation topics">Presentation</button>
+      <button type="button" class="option-btn" data-type="Mini Project">Mini Project</button>
     </div>
 
-    <div class="container hidden" id="second-step">
-        <h3>Select Number of Quiz Questions</h3>
-        <input type="range" id="quiz_count" min="5" max="50" value="10" oninput="this.nextElementSibling.value = this.value">
-        <output>10</output><br>
-        <button class="btn" onclick="submitFinal()">Generate Quiz</button>
-    </div>
+    <input type="hidden" name="content_type" id="content_type" value="Quiz">
+  </form>
+
+  <div class="spinner" id="loading-spinner">
+    <div></div>
+    <p>Generating, please wait...</p>
+  </div>
+  <div id="results-container"></div>
+</div>
+
+<script>
+  // Auto-resize textarea
+  const textarea = document.getElementById('query');
+  textarea.addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
+
+  // Option selection
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('content_type').value = btn.dataset.type;
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+
+  // File upload preview behavior
+  const fileInput = document.getElementById('file-upload');
+  const uploadLabel = document.getElementById('upload-label');
+  const uploadText = document.getElementById('upload-text');
+  const removeBtn = document.getElementById('remove-file');
+
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files.length > 0) {
+      uploadText.textContent = fileInput.files[0].name;
+      uploadLabel.classList.add('green');
+      removeBtn.style.display = 'inline';
+    }
+  });
+
+  removeBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    fileInput.value = '';
+    uploadText.textContent = 'Upload File';
+    uploadLabel.classList.remove('green');
+    removeBtn.style.display = 'none';
+  });
+
+  // Form submit
+  document.getElementById('query-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const spinner = document.getElementById('loading-spinner');
+    const resultBox = document.getElementById('results-container');
+    spinner.style.display = 'block';
+    resultBox.innerHTML = '';
+
+    const formData = new FormData(this);
+
+    fetch('/process', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        spinner.style.display = 'none';
+        resultBox.innerHTML = `<pre>${data.result}</pre>`;
+      })
+      .catch(error => {
+        spinner.style.display = 'none';
+        resultBox.innerHTML = 'An error occurred while processing.';
+        console.error('Error:', error);
+      });
+  });
+</script>
 </body>
 </html>
