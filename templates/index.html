@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -22,14 +22,69 @@
       margin: auto;
     }
 
-    h1 {
+    /* Hero Section Styles */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 1rem;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .hero-section h1 {
       font-size: 2.5rem;
       font-weight: 700;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       background: linear-gradient(120deg, #2c5282, #4c51bf);
-      background-clip: text;
+      -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-align: center;
+    }
+
+    .hero-section p {
+      font-size: 1.125rem;
+      color: #4b5563;
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.7;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .feature-item {
+      background: white;
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .feature-item svg {
+      width: 24px;
+      height: 24px;
+      color: #4f46e5;
+      flex-shrink: 0;
+    }
+
+    .feature-item h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 0.5rem;
+    }
+
+    .feature-item p {
+      font-size: 0.875rem;
+      margin: 0;
+      color: #6b7280;
     }
 
     .chat-bar {
@@ -138,6 +193,16 @@
       gap: 1rem;
       flex-wrap: wrap;
       margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .option-buttons.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
     .option-btn {
@@ -150,18 +215,69 @@
       font-weight: 500;
       color: #4b5563;
       font-family: 'Inter', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      background: rgba(79, 70, 229, 0.1);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.4s ease;
+    }
+
+    .option-btn:hover::before {
+      transform: translate(-50%, -50%) scale(2);
     }
 
     .option-btn:hover {
-      background-color: #f9fafb;
       border-color: #4f46e5;
       color: #4f46e5;
+      transform: translateY(-2px);
     }
 
     .option-btn.selected {
       background-color: #4f46e5;
       border-color: #4f46e5;
       color: white;
+    }
+
+    .option-btn.selected::before {
+      display: none;
+    }
+
+    .warning-tooltip {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      background-color: #ef4444;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 50;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .warning-tooltip.button-warning {
+      background-color: #eab308;
+    }
+
+    .warning-tooltip.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
 
     .spinner {
@@ -191,40 +307,84 @@
     }
 
     #results-container {
-      max-height: 500px;
+      display: none;
+      max-height: 600px;
       overflow-y: auto;
-      border: 2px solid #e5e7eb;
-      padding: 1.5rem;
+      border: 1px solid #e5e7eb;
       border-radius: 1rem;
       background-color: white;
-      white-space: pre-wrap;
-      text-align: left;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-top: 2rem;
+      position: relative;
+    }
+
+    .results-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background-color: white;
+      border-radius: 1rem 1rem 0 0;
+      z-index: 10;
+    }
+
+    .results-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .results-header .actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .action-button {
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      cursor: pointer;
+      color: #6b7280;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .action-button:hover {
+      background-color: #f3f4f6;
+      color: #4f46e5;
+    }
+
+    .results-content {
+      padding: 1.5rem;
       font-size: 1rem;
-      line-height: 1.6;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      line-height: 1.7;
+      color: #374151;
     }
 
-    #results-container::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    #results-container::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-
-    #results-container::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 4px;
-    }
-
-    #results-container::-webkit-scrollbar-thumb:hover {
-      background: #a1a1a1;
+    .results-content pre {
+      white-space: pre-wrap;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
     }
 
     @media (max-width: 640px) {
       .container {
         padding: 1.5rem 1rem;
+      }
+
+      .hero-section {
+        padding: 1.5rem 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
       }
 
       h1 {
@@ -258,12 +418,52 @@
         width: 100%;
         justify-content: center;
       }
+
+      .results-header {
+        padding: 1rem;
+      }
+
+      .results-content {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1>Welcome to PaperGen</h1>
+  <div class="hero-section">
+    <h1>Welcome to PaperGen</h1>
+    <p>Transform your documents into engaging educational content with AI-powered generation. Whether you need quizzes, assignments, presentations, or project ideas, PaperGen helps you create high-quality educational materials in seconds.</p>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <h3>Smart Generation</h3>
+          <p>Intelligent content creation from your documents</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+        </svg>
+        <div>
+          <h3>Multiple Formats</h3>
+          <p>Create quizzes, assignments, and more</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <div>
+          <h3>Instant Results</h3>
+          <p>Get your content in seconds</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <form id="query-form" enctype="multipart/form-data">
     <div class="chat-bar">
@@ -291,38 +491,104 @@
       <button type="button" class="option-btn" data-type="Mini Project">Mini Project</button>
     </div>
 
-    <input type="hidden" name="content_type" id="content_type" value="Quiz">
+    <input type="hidden" name="content_type" id="content_type" value="">
   </form>
+
+  <div class="warning-tooltip">
+    Please enter text or upload a file first
+  </div>
 
   <div class="spinner" id="loading-spinner">
     <div></div>
     <p>Generating, please wait...</p>
   </div>
-  <div id="results-container"></div>
+  
+  <div id="results-container">
+    <div class="results-header">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        Generated Content
+      </h2>
+      <div class="actions">
+        <button class="action-button" id="copy-button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <button class="action-button" id="download-button" title="Download as text file">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="results-content">
+      <pre></pre>
+    </div>
+  </div>
 </div>
 
 <script>
-  // Auto-resize textarea
   const textarea = document.getElementById('query');
-  textarea.addEventListener('input', function () {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-  });
-
-  // Option selection
-  document.querySelectorAll('.option-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.getElementById('content_type').value = btn.dataset.type;
-      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-    });
-  });
-
-  // File upload preview behavior
   const fileInput = document.getElementById('file-upload');
+  const optionButtons = document.querySelector('.option-buttons');
+  const warningTooltip = document.querySelector('.warning-tooltip');
   const uploadLabel = document.getElementById('upload-label');
   const uploadText = document.getElementById('upload-text');
   const removeBtn = document.getElementById('remove-file');
+  let tooltipTimeout;
+
+  function showWarning() {
+    warningTooltip.classList.add('visible');
+    clearTimeout(tooltipTimeout);
+    tooltipTimeout = setTimeout(() => {
+      warningTooltip.classList.remove('visible');
+    }, 3000);
+  }
+
+  function checkInputs() {
+    const hasText = textarea.value.trim().length > 0;
+    const hasFile = fileInput.files.length > 0;
+    
+    if (hasText || hasFile) {
+      optionButtons.classList.add('visible');
+    } else {
+      optionButtons.classList.remove('visible');
+      document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+      document.getElementById('content_type').value = '';
+    }
+  }
+
+  textarea.addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+    checkInputs();
+  });
+
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const hasText = textarea.value.trim().length > 0;
+      const hasFile = fileInput.files.length > 0;
+
+      if (!hasText && !hasFile) {
+        showWarning();
+        return;
+      }
+
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('content_type').value = btn.dataset.type;
+    });
+  });
 
   fileInput.addEventListener('change', function () {
     if (fileInput.files.length > 0) {
@@ -330,6 +596,7 @@
       uploadLabel.classList.add('green');
       removeBtn.style.display = 'inline';
     }
+    checkInputs();
   });
 
   removeBtn.addEventListener('click', function (e) {
@@ -338,15 +605,53 @@
     uploadText.textContent = 'Upload File';
     uploadLabel.classList.remove('green');
     removeBtn.style.display = 'none';
+    checkInputs();
   });
 
-  // Form submit
+  document.getElementById('copy-button').addEventListener('click', function() {
+    const content = document.querySelector('.results-content pre').textContent;
+    navigator.clipboard.writeText(content).then(() => {
+      this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+      setTimeout(() => {
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+      }, 2000);
+    });
+  });
+
+  document.getElementById('download-button').addEventListener('click', function() {
+    const content = document.querySelector('.results-content pre').textContent;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'generated-content.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  });
+
   document.getElementById('query-form').addEventListener('submit', function (e) {
     e.preventDefault();
+    
+    const hasText = textarea.value.trim().length > 0;
+    const hasFile = fileInput.files.length > 0;
+    const hasContentType = document.getElementById('content_type').value;
+
+    if (!hasContentType && (hasText || hasFile)) {
+      warningTooltip.textContent = 'Please select a content type (Quiz, Assignment, etc.)';
+      warningTooltip.classList.add('button-warning');
+      showWarning();
+      return;
+    } else if (!hasText && !hasFile) {
+      warningTooltip.textContent = 'Please enter text or upload a file first';
+      warningTooltip.classList.remove('button-warning');
+      showWarning();
+      return;
+    }
+
     const spinner = document.getElementById('loading-spinner');
     const resultBox = document.getElementById('results-container');
     spinner.style.display = 'block';
-    resultBox.innerHTML = '';
+    resultBox.style.display = 'none';
 
     const formData = new FormData(this);
 
@@ -357,11 +662,13 @@
       .then(response => response.json())
       .then(data => {
         spinner.style.display = 'none';
-        resultBox.innerHTML = `<pre>${data.result}</pre>`;
+        document.querySelector('.results-content pre').textContent = data.result;
+        resultBox.style.display = 'block';
       })
       .catch(error => {
         spinner.style.display = 'none';
-        resultBox.innerHTML = 'An error occurred while processing.';
+        document.querySelector('.results-content pre').textContent = 'An error occurred while processing.';
+        resultBox.style.display = 'block';
         console.error('Error:', error);
       });
   });
