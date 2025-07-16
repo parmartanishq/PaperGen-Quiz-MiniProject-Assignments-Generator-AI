@@ -1,5 +1,8 @@
 # PaperGen-Quiz-MiniProject-Assignments-Generator-AI
+## 🚀 Live Demo
 
+🔗 [papergen-quiz-miniproject-assignments.onrender.com](https://papergen-quiz-miniproject-assignments.onrender.com/)
+> ⚠️ Currently optimized for **desktop view** only. Mobile support is in progress.
 ## version 1.0.0 is ready to use
 ### Project is Under Development for Betterment. 
 _bugs can be expected
