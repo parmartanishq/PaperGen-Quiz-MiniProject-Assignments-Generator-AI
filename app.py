@@ -8,7 +8,7 @@ import google.generativeai as genai
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-model = genai.GenerativeModel("gemini-1.5-flash-latest")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "uploads"
